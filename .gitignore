@@ -1,6 +1,14 @@
 .DS_Store
 /node_modules/
 
-# React Router
-/.react-router/
-/build/
+.output
+.vinxi
+
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
