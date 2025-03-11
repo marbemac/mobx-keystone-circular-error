@@ -2,20 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { configure } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useMemo } from "react";
-import {
-  createRootStore,
-  type CommentStore,
-  type DocumentStore,
-  type RootStore,
-} from "~/stores";
+import { createRootStore, type DocumentStore, type RootStore } from "~/stores";
 
 export const Route = createFileRoute("/")({
   ssr: false,
   component: Home,
 });
-
-let documentCounter = 0;
-let commentCounter = 0;
 
 configure({
   disableErrorBoundaries: true,
@@ -27,19 +19,6 @@ function Home() {
   return (
     <div className="p-10">
       <div className="flex gap-5 items-center">
-        <h3>Documents</h3>
-        <button
-          className="px-4 py-2 text-blue-500 cursor-pointer"
-          onClick={() => {
-            rootStore.documents.insert({
-              id: `d${documentCounter++}`,
-              title: `Document ${documentCounter}`,
-            });
-          }}
-        >
-          [+ Add Document]
-        </button>
-
         <button
           className="px-4 py-2 text-red-500 cursor-pointer"
           onClick={() => {
@@ -76,40 +55,17 @@ const Document = observer(
     return (
       <div className="px-10">
         <div className="flex gap-10 items-center">
-          <div>{document.title}</div>
-          <button
-            className="px-4 py-2 text-blue-500 cursor-pointer"
-            onClick={() => {
-              const id = `c${commentCounter++}`;
-              rootStore.comments.insert({
-                id,
-                document_id: document.id,
-                content: `Comment ${id}`,
-              });
-            }}
-          >
-            [+ Add Comment]
-          </button>
+          <div>Document: {document.id}</div>
         </div>
 
-        <div className="px-10">
-          <Comments document={document} />
-        </div>
+        <Comments document={document} />
       </div>
     );
   }
 );
 
 const Comments = observer(({ document }: { document: DocumentStore }) => {
-  return (
-    <div>
-      {document.comments.map((comment) => (
-        <Comment key={comment.id} comment={comment} />
-      ))}
-    </div>
-  );
-});
-
-const Comment = observer(({ comment }: { comment: CommentStore }) => {
-  return <div>{comment.content}</div>;
+  // just making sure document.comments is observed, to trigger the error
+  console.log(document.comments);
+  return null;
 });
